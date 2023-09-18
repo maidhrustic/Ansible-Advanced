@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Runned Ansible playbook met parameters
+#
+# ./run -l <host> -t <tag> <extra paramaters>
+# -l zorgt ervoor dat je een specifieke host kan kiezen om de playbook op uit te voeren.
+
+set -eu
+time ansible-playbook -i hosts.ini site.yml  "$@"
