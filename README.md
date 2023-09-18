@@ -14,3 +14,6 @@ Je kan ook een bestaande file encrypten met het volgende commando: <br>
 `ansible-vault encrypt "naam".yml` <br>
 Om een bestaande file te decrypten gebruik je het volgende commando: <br>
 `ansible-vault decrypt "naam".yml` <br>
+
+## Topologie van de opdracht:
+![img](https://i.imgur.com/EJe8cGb.png) <br>
