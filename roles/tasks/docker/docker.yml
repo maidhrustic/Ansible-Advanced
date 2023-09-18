@@ -1,16 +1,7 @@
-- name: "Playbook om docker+docker-compose te installeren."
-  hosts: docker
-  become: yes
-  become_method: sudo
-  gather_facts: no
-  tasks:
-
-
-  - name: "Include de Ansible-Vault file."
+- name: "Include de Ansible-Vault file."
     include_vars:
       file: ../../../secrets.yml
     no_log: yes
-
 
   - name: "Geef de user sudo rechten"
     lineinfile:
