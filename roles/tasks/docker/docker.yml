@@ -37,7 +37,6 @@
       - ca-certificates
       - curl
       - software-properties-common
-      - openssl
       - docker.io
       - docker-compose
 
@@ -57,20 +56,6 @@
       state: started
     async: 300
     poll: 0
-
-  - name: "Maak een mapje voor de SSL certificaten"
-    file:
-      path: /etc/gitlab
-      state: directory
-      owner: "{{ ansible_user }}"
-      group: "{{ ansible_user }}"
-      mode: 0644
-  
-  - name: "Genereer een SSL certificate"
-    command: openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout /etc/gitlab/gitlab.key -out /etc/gitlab/gitlab.crt
-    args:
-      creates: /etc/gitlab/gitlab.key
-
 
   - name: "Kijk of de directories bestaan" # Als de dirs wel bestaan dan skipped het wanneer je playbook runned.
     stat:
