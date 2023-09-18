@@ -1,0 +1,132 @@
+- name: "Playbook om docker+docker-compose te installeren."
+  hosts: docker
+  become: yes
+  become_method: sudo
+  gather_facts: no
+  tasks:
+
+
+  - name: "Include de Ansible-Vault file."
+    include_vars:
+      file: ../../../secrets.yml
+    no_log: yes
+
+
+  - name: "Geef de user sudo rechten"
+    lineinfile:
+      dest: /etc/sudoers
+      line: "{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL"
+      validate: visudo -cf %s
+      state: present
+      backup: yes
+
+  - name: "Maak een groep genaamd docker aan"
+    group:
+      name: docker
+      state: present
+
+  - name: "Voeg de ansible_user toe aan de groep docker"
+    user:
+      name: "{{ ansible_user }}"
+      groups: docker,sudo
+      append: yes
+    
+  - name: "Update alle packages"  
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      upgrade: dist
+
+  - name: "Installeer alle benodigde packages"
+    apt:
+      name: "{{ item }}"
+      state: latest
+    loop:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - openssl
+      - docker.io
+      - docker-compose
+
+  - name: "Zorg ervoor dat de docker service enabled + started is."
+    service:
+      name: docker
+      enabled: yes
+      state: started
+    async: 300
+    poll: 0
+    notify: "Restart Docker and Docker Compose"
+
+  - name: "Zorg ervoor dat docker-compose enabled + started is."
+    service:
+      name: docker-compose
+      enabled: yes
+      state: started
+    async: 300
+    poll: 0
+
+  - name: "Maak een mapje voor de SSL certificaten"
+    file:
+      path: /etc/gitlab
+      state: directory
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: 0644
+  
+  - name: "Genereer een SSL certificate"
+    command: openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout /etc/gitlab/gitlab.key -out /etc/gitlab/gitlab.crt
+    args:
+      creates: /etc/gitlab/gitlab.key
+
+
+  - name: "Kijk of de directories bestaan" # Als de dirs wel bestaan dan skipped het wanneer je playbook runned.
+    stat:
+      path: "{{ item }}"
+    register: dir_check
+    loop:
+      - ./nextcloud/data
+      - ./nextcloud/db
+      - ./gitlab/config
+      - ./gitlab/logs
+      - ./gitlab/data
+
+
+  - name: "Maak de directories aan wanneer ze nog niet bestaan."
+    file:
+      path: "{{ item.item }}"
+      state: directory
+      owner: "{{ ansible_user }}"
+      group: docker
+      mode: '0775'
+    loop: "{{ dir_check.results }}"
+    when: not item.stat.exists
+
+
+  - name: "Kopieer de docker-compose.yml file naar de server"
+    copy:
+      src: docker-compose.yml
+      dest: /home/{{ ansible_user }}/docker-compose.yml
+      owner: "{{ ansible_user }}"
+      group: "docker"
+      mode: 0644
+
+  - name: "Kijk of de containers running zijn" # zo ja, dan wordt dit ook geskipped.
+    shell: docker ps -q -a --filter "status=running"
+    register: running_containers
+    changed_when: false
+    failed_when: false
+
+  - name: "Run docker-compose up -d als de containers er niet zijn/runnen."
+    docker_compose:
+      project_src: /home/{{ ansible_user }}/
+      state: present
+    when: running_containers.stdout_lines | length == 0
+
+
+  handlers:
+      - name: Restart Docker and Docker Compose
+        service:
+          name: docker
+          state: restarted

@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  nextcloud:
+    image: nextcloud:latest
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nextcloud/data:/var/www/html/data
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: "{{ nextcloud_db_password }}"
+    depends_on:
+      - nextcloud-db
+
+  nextcloud-db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "{{ nextcloud_db_root_password }}"
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: "{{ nextcloud_db_password }}"
+    volumes:
+      - ./nextcloud/db:/var/lib/mysql
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    ports:
+      - "8443:443"
+      - "8081:80"
+    environment:
+      GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
