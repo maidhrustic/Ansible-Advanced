@@ -23,16 +23,16 @@
 
 - name: Create new domain in a new forest on the target host
   ansible.windows.win_domain:
-    dns_domain_name: Northerport.intern
+    dns_domain_name: "{{ dns_domain_name }}"
     safe_mode_password: "{{ windows_password }}"
 
 - name: Create new Windows domain in a new forest with specific parameters
   ansible.windows.win_domain:
     create_dns_delegation: no
     database_path: C:\Windows\NTDS
-    dns_domain_name: Northerport.intern
+    dns_domain_name: "{{ dns_domain_name }}"
     domain_mode: Win2012R2
-    domain_netbios_name: NORTHERPORT
+    domain_netbios_name: "{{ domain_netbios_name }}"
     forest_mode: Win2012R2
     safe_mode_password: "{{ windows_password }}"
     sysvol_path: C:\Windows\SYSVOL
@@ -43,8 +43,8 @@
 
 - name: Promote server with custom paths
   ansible.windows.win_domain_controller:
-    dns_domain_name: Northerport.intern
-    domain_admin_user: Administrator@Northerport
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_admin_user: Administrator@"{{ dns_domain_name }}"
     domain_admin_password: "{{ windows_password }}"
     safe_mode_password: "{{ windows_password }}"
     state: domain_controller
@@ -55,8 +55,8 @@
 
 - name: Ensure a server is a domain controller
   ansible.windows.win_domain_controller:
-    dns_domain_name: Northerport.intern
-    domain_admin_user: Northerport\Administrator
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_admin_user: "{{check_netbios_name}}"
     domain_admin_password: "{{ windows_password }}"
     safe_mode_password: "{{ windows_password }}"
     state: domain_controller
