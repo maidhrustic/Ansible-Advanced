@@ -1,0 +1,5 @@
+ansible_host: x.x.x.x
+dns_domain_name: "voorbeeld.intern"
+domain_netbios_name: "VOORBEELD"
+check_netbios_name: "VOORBEELD\\Administrator"
+domain_admin_user: "Administrator"
