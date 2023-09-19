@@ -2,22 +2,24 @@
   gather_facts: true
   become: true
   roles:
-  - { role: tasks/docker,        tag: [ 'docker']}
+  - { role: docker, tags: [ 'docker']}
 
 - hosts: routers 
   gather_facts: true
   become: true
   roles:
-  - { role: tasks/x,        tag: [ 'x']}
+  - { role: routers, tags: [ 'routers']}
 
 - hosts: switches
   gather_facts: true
   become: true
   roles:
-  - { role: tasks/x,        tag: [ 'x']}
+  - { role: switches, tags: [ 'switches']}
 
 - hosts: WindowsServer
   gather_facts: true
-  become: true
+  become: yes
+  become_method: runas
+  become_user: Administrator
   roles:
-  - { role: tasks/x,        tag: [ 'x']}
+  - { role: windows, tags: [ 'windows']}
