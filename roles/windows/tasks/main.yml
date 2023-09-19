@@ -3,30 +3,22 @@
     file: ../../../group_vars/WindowsServer/vault.yml
   no_log: yes
 
-- name: Install AD DS Role
+- name: Installeer de volgende rollen.
   win_feature:
-    name: AD-Domain-Services
+    name: "{{ item }}"
     state: present
+  loop:
+    - AD-Domain-Services
+    - DHCP
+    - DNS
   when: ansible_distribution_version >= "10.0"
 
-- name: Install DHCP Role
-  win_feature:
-    name: DHCP
-    state: present
-  when: ansible_distribution_version >= "10.0"
-
-- name: Install DNS Role
-  win_feature:
-    name: DNS
-    state: present
-  when: ansible_distribution_version >= "10.0"
-
-- name: Create new domain in a new forest on the target host
+- name: Creeër een nieuwe domein in een nieuw forest op de host.
   ansible.windows.win_domain:
     dns_domain_name: "{{ dns_domain_name }}"
     safe_mode_password: "{{ windows_password }}"
 
-- name: Create new Windows domain in a new forest with specific parameters
+- name: Configureer de forest met de gegeven configuratie.
   ansible.windows.win_domain:
     create_dns_delegation: no
     database_path: C:\Windows\NTDS
@@ -38,10 +30,10 @@
     sysvol_path: C:\Windows\SYSVOL
   register: domain_install
 
-- name: Reboot testing
+- name: Reboot de server
   ansible.windows.win_reboot:
 
-- name: Promote server with custom paths
+- name: Promoveer de server als een Domain Controller
   ansible.windows.win_domain_controller:
     dns_domain_name: "{{ dns_domain_name }}"
     domain_admin_user: Administrator@"{{ dns_domain_name }}"
@@ -53,7 +45,7 @@
     domain_log_path: D:\NTDS
   register: dc_promotion
 
-- name: Ensure a server is a domain controller
+- name: Check of de server een Domain Controller is
   ansible.windows.win_domain_controller:
     dns_domain_name: "{{ dns_domain_name }}"
     domain_admin_user: "{{check_netbios_name}}"
