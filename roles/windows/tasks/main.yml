@@ -1,0 +1,62 @@
+- name: "Include de Ansible-Vault file."
+  include_vars:
+    file: ../../../group_vars/WindowsServer/vault.yml
+  no_log: yes
+
+- name: Install AD DS Role
+  win_feature:
+    name: AD-Domain-Services
+    state: present
+  when: ansible_distribution_version >= "10.0"
+
+- name: Install DHCP Role
+  win_feature:
+    name: DHCP
+    state: present
+  when: ansible_distribution_version >= "10.0"
+
+- name: Install DNS Role
+  win_feature:
+    name: DNS
+    state: present
+  when: ansible_distribution_version >= "10.0"
+
+- name: Create new domain in a new forest on the target host
+  ansible.windows.win_domain:
+    dns_domain_name: Northerport.intern
+    safe_mode_password: "{{ windows_password }}"
+
+- name: Create new Windows domain in a new forest with specific parameters
+  ansible.windows.win_domain:
+    create_dns_delegation: no
+    database_path: C:\Windows\NTDS
+    dns_domain_name: Northerport.intern
+    domain_mode: Win2012R2
+    domain_netbios_name: NORTHERPORT
+    forest_mode: Win2012R2
+    safe_mode_password: "{{ windows_password }}"
+    sysvol_path: C:\Windows\SYSVOL
+  register: domain_install
+
+- name: Reboot testing
+  ansible.windows.win_reboot:
+
+- name: Promote server with custom paths
+  ansible.windows.win_domain_controller:
+    dns_domain_name: Northerport.intern
+    domain_admin_user: Administrator@Northerport
+    domain_admin_password: "{{ windows_password }}"
+    safe_mode_password: "{{ windows_password }}"
+    state: domain_controller
+    sysvol_path: D:\SYSVOL
+    database_path: D:\NTDS
+    domain_log_path: D:\NTDS
+  register: dc_promotion
+
+- name: Ensure a server is a domain controller
+  ansible.windows.win_domain_controller:
+    dns_domain_name: Northerport.intern
+    domain_admin_user: Northerport\Administrator
+    domain_admin_password: "{{ windows_password }}"
+    safe_mode_password: "{{ windows_password }}"
+    state: domain_controller
