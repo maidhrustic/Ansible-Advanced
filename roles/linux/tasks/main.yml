@@ -2,7 +2,7 @@
 - hosts: all
   become: true
   vars_files:
-    - vars/default.yml
+    - host_vars/LinuxServer
 
   tasks:
     - name: Install Prerequisites
