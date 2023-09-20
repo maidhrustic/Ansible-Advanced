@@ -3,6 +3,10 @@
     file: ../../../group_vars/WindowsServer/vault.yml
   no_log: true
 
+- name: " Include de powershell script om OpenSSH te installeren"
+  ansible.builtin.include_tasks:
+    file: ../../../include/windows/ssh.yml
+
 - name: Installeer de volgende rollen.
   win_feature:
     name: "{{ item }}"
