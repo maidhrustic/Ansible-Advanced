@@ -1,0 +1,40 @@
+---
+- name: Creeër een nieuwe domein in een nieuw forest op de host.
+  ansible.windows.win_domain:
+    dns_domain_name: "{{ dns_domain_name }}"
+    safe_mode_password: "{{ windows_password }}"
+
+- name: Configureer de forest met de gegeven configuratie.
+  ansible.windows.win_domain:
+    create_dns_delegation: no
+    database_path: C:\Windows\NTDS
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_mode: Win2012R2
+    domain_netbios_name: "{{ domain_netbios_name }}"
+    forest_mode: Win2012R2
+    safe_mode_password: "{{ windows_password }}"
+    sysvol_path: C:\Windows\SYSVOL
+  register: domain_install
+
+- name: Reboot de server
+  ansible.windows.win_reboot:
+
+- name: Promoveer de server als een Domain Controller
+  ansible.windows.win_domain_controller:
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_admin_user: Administrator@"{{ dns_domain_name }}"
+    domain_admin_password: "{{ windows_password }}"
+    safe_mode_password: "{{ windows_password }}"
+    state: domain_controller
+    sysvol_path: D:\SYSVOL
+    database_path: D:\NTDS
+    domain_log_path: D:\NTDS
+  register: dc_promotion
+
+- name: Check of de server een Domain Controller is
+  ansible.windows.win_domain_controller:
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_admin_user: "{{ check_netbios_name }}"
+    domain_admin_password: "{{ windows_password }}"
+    safe_mode_password: "{{ windows_password }}"
+    state: domain_controller
