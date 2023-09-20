@@ -1,7 +1,7 @@
 - name: "Include de Ansible-Vault file."
   include_vars:
     file: ../../../group_vars/WindowsServer/vault.yml
-  no_log: yes
+  no_log: true
 
 - name: Installeer de volgende rollen.
   win_feature:
