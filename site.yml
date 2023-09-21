@@ -23,3 +23,11 @@
   become_user: Administrator
   roles:
   - { role: windows, tags: [ 'windows']}
+
+- hosts: Werkstations
+  gather_facts: true
+  become: yes
+  become_method: runas
+  become_user: Administrator
+  roles:
+  - { role: werkstations, tags: [ 'werkstations']}
