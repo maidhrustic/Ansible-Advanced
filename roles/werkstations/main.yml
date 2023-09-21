@@ -1,0 +1,34 @@
+- name: "Include de Ansible-Vault file."
+  include_vars:
+    file: ../../../group_vars/Werkstations/vault.yml
+  no_log: true
+
+- name: Gather information about the domain membership
+  win_domain_membership:
+    domain_admin_user: "{{ domain_admin_user }}"
+    domain_admin_password: "{{ windows_password }}"
+    dns_domain_name: "{{ dns_domain_name }}"
+    ignore_errors: true
+    state: domain
+  register: domain_info
+
+- name: "Join het domain."
+  ansible.windows.win_domain_membership:
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_admin_user: "{{ domain_admin_user }}"
+    domain_admin_password: "{{ windows_password }}"
+    domain_ou_path: "OU=Domain Controllers,DC={{ domain }},DC={{ controller }}"
+    state: domain
+  register: domain_state
+
+- name: Reboot de werkstation
+  ansible.windows.win_reboot:
+
+- name: "Verplaats de computer van Organizational Units."
+  ansible.windows.win_powershell: 
+    script: |
+      Import-Module ActiveDirectory
+      $sourceOU = "{{ sourceOU }}"
+      $destinationOU = "{{ destinationOU }}"
+      Move-ADObject -Identity $sourceOU -TargetPath $destinationOU
+  changed_when: false
