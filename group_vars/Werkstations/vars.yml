@@ -1,0 +1,22 @@
+ansible_user: "Administrator"
+ansible_password: "{{ windows_password }}"
+ansible_become_password: "{{ windows_password }}"
+
+ansible_connection: winrm
+ansible_winrm_transport: basic
+ansible_winrm_port: 5985
+
+computers: "{{ inventory_hostname }}" 
+
+# ADDS
+dns_domain_name: "noorderpoort.intern"
+domain_netbios_name: "NOORDERPOORT"
+check_netbios_name: "NOORDERPOORT\\Administrator"
+domain_admin_user: "Administrator@noorderpoort.intern"
+domain: "noorderpoort"
+controller: "intern"
+
+# Organizational Units
+sourceOU: "CN={{ computers }}, OU=Domain Controllers,DC={{ domain }},DC={{ controller }}"
+destinationOU: "OU=Computers,DC={{ domain }},DC={{ controller }}"
+
