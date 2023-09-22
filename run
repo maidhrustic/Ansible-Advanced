@@ -7,3 +7,6 @@
 
 set -eu
 time ansible-playbook -i hosts.ini site.yml  "$@"
+
+
+# credits naar Rykle Baron
