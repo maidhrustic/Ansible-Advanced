@@ -1,0 +1,29 @@
+- name: Maak de root OU aan
+  microsoft.ad.ou:
+    name: "{{ rootOU }}"
+    path: DC={{ domain }},DC={{ controller }}
+    state: present
+
+- name: Maak de verschillende afdelingen.
+  microsoft.ad.ou:
+    name: "{{ item }}"
+    path: OU={{ rootOU }},DC={{ domain }},DC={{ controller }}
+    state: present
+  loop:
+    - Productie
+    - Verkoop
+    - Automatisering
+    - Administratie
+    - Directie
+
+- name: Maak sub OUs van de verschillende afdelingen
+  microsoft.ad.ou:
+    name: "{{ item.name }}"
+    path: OU={{ item.OU }},OU={{rootOU}}, DC={{ domain }}, DC={{ controller }}
+    state: present
+  with_items:
+    - {OU: Productie, name: "Fabricage"}
+    - {OU: Verkoop, name: "Inkoop"}
+    - {OU: Automatisering, name: "SysAdmins"}
+    - {OU: Directie, name: "Rechterhand"}
+
