@@ -21,3 +21,7 @@
 - name: " Include de configuraties over Active Domain Name Services. " 
   ansible.builtin.include_tasks:
     file: ../../../include/windows/adds.yml
+
+- name: " Include de configuraties om OUs te maken. "
+  ansible.builtin.include_tasks:
+    file: ../../../include/windows/ou.yml
