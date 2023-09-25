@@ -5,3 +5,9 @@ dns_domain_name: "noorderpoort.intern"
 domain_netbios_name: "NOORDERPOORT"
 check_netbios_name: "NOORDERPOORT\\Administrator"
 domain_admin_user: "Administrator@noorderpoort.intern"
+
+domain: "noorderpoort"
+controller: "intern"
+
+#OU
+rootOU: "NPAfdelingen"
