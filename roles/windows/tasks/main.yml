@@ -30,3 +30,7 @@
 - name: " Include de AGDLP configuratie. "
   ansible.builtin.include_tasks:
     file: ../../../include/windows/groups.yml
+
+    - name: " Include de Users configuratie. "
+  ansible.builtin.include_tasks:
+    file: ../../../include/windows/users.yml
