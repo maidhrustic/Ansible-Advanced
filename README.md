@@ -29,7 +29,9 @@ winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 ```
 
 > Handige tips: <br>
-Public firewall uitzetten als je NIC op public staat, of verander je NIC naar Private als je firewall hebt aan staan. <br>
+als je NIC geconnect is met de Public network, moet je de firewall van public uitzetten. <br>
+Als je NIC geconnect is met de Private network, dan hoef je geen firewall uit te zetten. <br>
+en dan werkt de connectie tussen ansible en winrm. <br><br>
 DNS van je NIC veranderen naar de IP van de server. <br>
 Zorg ervoor dat de Windows Remote Manager service op "Automatic" staat. <br>
 De juiste user gebruiken als ansible_user: <br>
