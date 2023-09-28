@@ -8,15 +8,16 @@
     file: ../../../include/windows/ssh.yml
 
 - name: Installeer de volgende rollen.
-  win_feature:
+  ansibe.windows.win_feature:
     name: "{{ item }}"
     state: present
+    include_sub_features: true
+    include_management_tools: true
   loop:
     - AD-Domain-Services
     - DHCP
     - DNS
     - WDS
-  when: ansible_distribution_version >= "10.0"
 
 - name: " Include de configuraties over Active Domain Name Services. " 
   ansible.builtin.include_tasks:
@@ -25,3 +26,7 @@
 - name: " Include de configuraties om OUs te maken. "
   ansible.builtin.include_tasks:
     file: ../../../include/windows/ou.yml
+
+- name: " Include de AGDLP configuratie. "
+  ansible.builtin.include_tasks:
+    file: ../../../include/windows/groups.yml
