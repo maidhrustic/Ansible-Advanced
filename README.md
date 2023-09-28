@@ -29,10 +29,12 @@ winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 ```
 
 > Handige tips: <br>
-Public firewall uitzetten. <br>
+Public firewall uitzetten als je NIC op public staat, of verander je NIC naar Private firewall. <br>
 DNS van je NIC veranderen naar de IP van de server. <br>
 Zorg ervoor dat de Windows Remote Manager service op "Automatic" staat. <br>
 De juiste user gebruiken als ansible_user: <br>
+Juiste IP-address gebruiken in de hosts.ini of host_vars. <br>
+Juiste hostname gebruiken. <br>
 
 
 ### De opdracht bevat de volgende onderdelen:
