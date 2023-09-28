@@ -1,0 +1,57 @@
+- name: "GlobalGroups voor de OU's"
+  community.windows.win_domain_group:
+    name: "{{ item.globalgroup }}"
+    scope: global
+    path: OU={{item.OU}}, OU={{rootOU}}, DC={{domain}}, DC={{controller}}
+    state: present
+  with_items:
+    - {OU: Productie, globalgroup: "GG_Productie"}
+    - {OU: Verkoop, globalgroup: "GG_Verkoop"}
+    - {OU: Automatisering, globalgroup: "GG_Automatisering"}
+    - {OU: Administratie, globalgroup: "GG_Administratie"}
+    - {OU: Directie, globalgroup: "GG_Directie"}
+  changed_when: false
+
+- name: "DomainLocal voor de OU's"
+  microsoft.ad.group:
+    name: "{{ item.domainlocal }}"
+    scope: domainlocal
+    path: OU={{item.OU}}, OU={{rootOU}}, DC={{domain}}, DC={{controller}}
+    state: present
+    members:
+      set: "{{item.globalgroup}}"
+  with_items:
+    - {OU: Productie, domainlocal: "DL_Productie", globalgroup: "GG_Productie"}
+    - {OU: Verkoop, domainlocal: "DL_Verkoop", globalgroup: "GG_Verkoop"}
+    - {OU: Automatisering, domainlocal: "DL_Automatisering", globalgroup: "GG_Automatisering"}
+    - {OU: Administratie, domainlocal: "DL_Administratie", globalgroup: "GG_Administratie"}
+    - {OU: Directie, domainlocal: "DL_Directie", globalgroup: "GG_Directie"}
+  changed_when: false
+
+- name: "GlobalGroups voor de childOUs"
+  community.windows.win_domain_group:
+    name: "{{item.globalgroup}}"
+    scope: global
+    path: OU={{item.childOU}}, OU={{item.OU}}, OU={{rootOU}}, DC={{domain}}, DC={{controller}}
+    state: present
+  with_items:
+    - {OU: Productie, globalgroup: "GG_Fabricage", childOU: "Fabricage"}
+    - {OU: Verkoop, globalgroup: "GG_Inkoop", childOU: "Inkoop"}
+    - {OU: Automatisering, globalgroup: "GG_SysAdmins", childOU: "SysAdmins"}
+    - {OU: Directie, globalgroup: "GG_Rechterhand", childOU: "Rechterhand"}
+  changed_when: false
+
+- name: "Domainlocal voor de subOUs van de childOUs"
+  microsoft.ad.group:
+    name: "{{ item.domainlocal }}"
+    scope: domainlocal
+    path: OU={{item.childOU}}, OU={{item.OU}}, OU={{rootOU}}, DC={{domain}}, DC={{controller}}
+    state: present
+    members:
+      set: "{{item.globalgroup}}"
+  with_items:
+    - {OU: Productie, childOU: Fabricage, domainlocal: "DL_Fabricage", globalgroup: "GG_Fabricage"}
+    - {OU: Verkoop, childOU: Inkoop, domainlocal: "DL_Inkoop", globalgroup: "GG_Inkoop"}
+    - {OU: Automatisering, childOU: SysAdmins, domainlocal: "DL_SysAdmins", globalgroup: "GG_SysAdmins"}
+    - {OU: Directie, childOU: Rechterhand, domainlocal: "DL_Rechterhand", globalgroup: "GG_Rechterhand"}
+  changed_when: false
