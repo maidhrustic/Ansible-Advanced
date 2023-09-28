@@ -2,6 +2,14 @@
 
 ## De contributors zijn: Joshua, Andy, Maid, Sebastiaan en Michel.
 
+## Ansible Galaxy
+Deze Ansible Galaxy collections hebben wij gebruikt: <br>
+```shell
+ansible-galaxy collection install ansible.windows
+ansible-galaxy collection install community.windows
+ansible-galaxy collection install microsoft.ad
+```
+
 ## Ansible-Vault
 Ansible vault maak je aan met het volgende commando: <br>
 `ansible-vault create "naam".yml` <br>
