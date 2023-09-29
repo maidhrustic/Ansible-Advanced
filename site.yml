@@ -23,6 +23,7 @@
   become_user: Administrator
   roles:
   - { role: windows, tags: [ 'windows']}
+  - { role: windows updates, tags: [ 'updates']}
 
 - hosts: Werkstations
   gather_facts: true
