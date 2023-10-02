@@ -4,8 +4,19 @@
 
 ## Nadat je de repo hebt gecloned naar je eigen machine, run dan vervolgens het volgende commando:
 `ansible-galaxy install -r requirements.yml`
-> HIERVOOR MOET JE WEL IN DE JUISTE DIRECTORY ZITTEN!!!!!!!!!!!!! <br>
-Dit zorgt ervoor dat alle benodigde roles/collections worden geinstalleerd, zodat je de modules kan gebruiken. <br>
+
+> **HIERVOOR MOET JE WEL IN DE JUISTE DIRECTORY ZITTEN!!!!!!!!!!!!!** <br>
+**Requirements.yml** bevat alle collections/roles die wij hebben gebruikt om de modules in de playbooks te kunnen gebruiken. <br>
+
+Dit zorgt ervoor dat de volgende collections/roles worden geinstalleerd: <br>
+Collections:
+- community.windows 
+- ansible.windows 
+- microsoft.ad 
+
+Roles:
+- geerlingguy/ansible-role-ntp <br>
+
 Als je al de collections hebt geinstalleerd, dan hoef je dit commando niet uit te voeren. <br>
 
 ## Ansible-Vault
@@ -15,8 +26,12 @@ Je kan ook een bestaande file encrypten met het volgende commando: <br>
 `ansible-vault encrypt "naam".yml` <br>
 Om een bestaande file te decrypten gebruik je het volgende commando: <br>
 `ansible-vault decrypt "naam".yml` <br>
-Al wil je een playbook runnen met een encrypte vault gebruik dan de volgende parameter: <br>
-`--ask-vault-pass` <br>
+Al wil je alleen een string encrypten gebruik dan het volgende commando: <br>
+`ansible-vault encrypt_string "string"` <br>
+Al wil een ad-hoc commando uitvoeren met een encrypted variabele gebruik dan het volgende commando: <br>
+ansible -m "module" -i hosts.ini "host" --ask-vault-pass
+
+Al wil je een playbook runnen met de run file, hoef je hier geen --ask-vault-pass bij te gebruiken. <br>
 
 ## Win-RM opzetten voor connectie met je Ansible VM:
 
