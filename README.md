@@ -2,13 +2,11 @@
 
 ## De contributors zijn: Joshua, Andy, Maid, Sebastiaan en Michel.
 
-## Ansible Galaxy
-Deze Ansible Galaxy collections hebben wij gebruikt: <br>
-```shell
-ansible-galaxy collection install ansible.windows
-ansible-galaxy collection install community.windows
-ansible-galaxy collection install microsoft.ad
-```
+## Nadat je de repo hebt gecloned naar je eigen machine, run dan vervolgens het volgende commando:
+`ansible-galaxy install -r requirements.yml`
+> HIERVOOR MOET JE WEL IN DE JUISTE DIRECTORY ZITTEN!!!!!!!!!!!!! <br>
+Dit zorgt ervoor dat alle benodigde roles/collections worden geinstalleerd, zodat je de modules kan gebruiken. <br>
+Als je al de collections hebt geinstalleerd, dan hoef je dit commando niet uit te voeren. <br>
 
 ## Ansible-Vault
 Ansible vault maak je aan met het volgende commando: <br>
