@@ -1,0 +1,31 @@
+#- name: "Installeer alle security, critical & rollup updates"
+#  ansible.windows.win_updates:
+#    category_names:
+#      - SecurityUpdates
+#      - CriticalUpdates
+#      - UpdateRollups
+#    reboot: true
+#    reboot_timeout: 3600
+
+- name: "Installeer ALLE updates"
+  ansible.windows.win_updates:
+    category_names: '*'
+    reboot: true
+    reboot_timeout: 3600
+
+#- name: "Installeer updates met code"
+#  ansible.windows.win_updates:
+#    category_names:
+#    - SecurityUpdates
+#    - CriticalUpdates
+#    - UpdateRollups
+#    accept_list: 
+#    - KB2267602
+#    - KB5030178
+#    - KB890830
+#    - KB5030214
+#    reboot: true
+#    reboot_timeout: 3600
+
+- name: Reboot de server
+  ansible.windows.win_reboot:
