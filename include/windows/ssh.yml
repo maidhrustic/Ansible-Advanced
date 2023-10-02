@@ -1,14 +1,16 @@
 ---
 
-- name: Installeer OpenSSH en zet het automatisch aan
+- name: Installeer OpenSSH.client
   ansible.windows.win_powershell:
     script: |
       if (!(Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*')) {
         Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+      } 
+
+
+- name: Installeer OpenSSH.server en start de service
+  ansible.windows.win_powershell:
+    script: |
         Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
         Start-Service sshd
         Set-Service -Name sshd -StartupType 'Automatic' 
-      } 
-      else {
-        $Ansible.Changed = $false
-      }
