@@ -6,7 +6,7 @@
 # -l zorgt ervoor dat je een specifieke host kan kiezen om de playbook op uit te voeren.
 
 set -eu
-time ansible-playbook -i hosts.ini site.yml  "$@"
+time ansible-playbook -i hosts.ini site.yml --ask-vault-pass "$@"
 
 
 # credits naar Rykle Baron
