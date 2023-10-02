@@ -8,7 +8,7 @@
     file: ../../../include/windows/ssh.yml
 
 - name: Installeer de volgende rollen.
-  ansibe.windows.win_feature:
+  ansible.windows.win_feature:
     name: "{{ item }}"
     state: present
     include_sub_features: true
