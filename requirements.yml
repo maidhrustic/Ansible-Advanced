@@ -1,0 +1,16 @@
+---
+collections:
+  - name: community.windows
+    version: "1.13.0"
+    source: https://galaxy.ansible.com
+  - name: ansible.windows
+    version: "1.14.0"
+    source: https://galaxy.ansible.com
+  - name: microsoft.ad
+    version: "1.3.0"
+    source: https://galaxy.ansible.com
+
+roles:
+  - name: geerlingguy/ansible-role-ntp
+    src: https://github.com/geerlingguy/ansible-role-ntp
+    version: master
