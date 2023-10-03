@@ -63,3 +63,12 @@
         state: enabled
         policy: deny
         direction: incoming
+
+  # SSH setup
+    - name: Add a host in the configuration
+      community.general.ssh_config:
+        user: "{{ create_user }}"
+        host: "{{ hostname }}"
+        identity_file: "/home/{{ create_user }}/.ssh/id_rsa"
+        port: '2223'
+        state: present
