@@ -1,4 +1,4 @@
-ansible_host: x.x.x.x
+ansible_host: 192.168.150.100
 
 # ADDS
 dns_domain_name: "noorderpoort.intern"

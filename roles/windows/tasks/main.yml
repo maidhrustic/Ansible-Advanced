@@ -1,11 +1,11 @@
-- name: "Include de Ansible-Vault file."
-  include_vars:
-    file: ../../../group_vars/WindowsServer/vault.yml
-  no_log: true
+# - name: "Include de Ansible-Vault file."
+#   include_vars:
+#     file: ../../../group_vars/WindowsServer/vault.yml
+#   no_log: true
 
-- name: " Include de powershell script om OpenSSH te installeren"
-  ansible.builtin.include_tasks:
-    file: ../../../include/windows/ssh.yml
+# - name: " Include de powershell script om OpenSSH te installeren"
+#   ansible.builtin.include_tasks:
+#     file: ../../../include/windows/ssh.yml
 
 - name: Installeer de volgende rollen.
   ansible.windows.win_feature:
@@ -23,18 +23,18 @@
   ansible.builtin.include_tasks:
     file: ../../../include/windows/adds.yml
 
-- name: " Include de configuraties om OUs te maken. "
-  ansible.builtin.include_tasks:
-    file: ../../../include/windows/ou.yml
+# - name: " Include de configuraties om OUs te maken. "
+#   ansible.builtin.include_tasks:
+#     file: ../../../include/windows/ou.yml
 
-- name: " Include de AGDLP configuratie. "
-  ansible.builtin.include_tasks:
-    file: ../../../include/windows/groups.yml
+# - name: " Include de AGDLP configuratie. "
+#   ansible.builtin.include_tasks:
+#     file: ../../../include/windows/groups.yml
 
-- name: " Include de Users configuratie. "
-  ansible.builtin.include_tasks:
-    file: ../../../include/windows/users.yml
+# - name: " Include de Users configuratie. "
+#   ansible.builtin.include_tasks:
+#     file: ../../../include/windows/users.yml
 
-- name: " Include de Users configuratie. "
-  ansible.builtin.include_tasks:
-    file: ../../../include/windows/shares.yml
+# - name: " Include de Users configuratie. "
+#   ansible.builtin.include_tasks:
+#     file: ../../../include/windows/shares.yml
