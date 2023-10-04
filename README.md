@@ -59,6 +59,3 @@ Juiste hostname gebruiken. <br>
 
 ## Topologie van de opdracht:
 ![img](https://i.imgur.com/EJe8cGb.png) <br>
-
-> Vraag: <br>
-Wie doet de switches? Ik ben vooral bezig met linux, Maid met windows samen met Joshua, Andy doet de routers en Mitch wilt graag met linux AI bezig.
