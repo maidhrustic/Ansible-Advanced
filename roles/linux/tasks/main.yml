@@ -1,9 +1,3 @@
----
-- hosts: all
-  become: true
-  vars_files:
-    - host_vars/LinuxServer
-
   tasks:
     - name: Install Prerequisites
       apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
@@ -63,6 +57,32 @@
         state: enabled
         policy: deny
         direction: incoming
+ # UFW config (https://docs.ansible.com/ansible/latest/collections/ansible/posix/firewalld_module.html#parameter-zone)
+    - name: permit traffic in default zone for https service
+      ansible.posix.firewalld:
+        service: https
+        permanent: true
+        state: enabled
+    
+    - name: permit ospf traffic
+      ansible.posix.firewalld:
+        protocol: ospf
+        permanent: true
+        state: enabled
+    
+    - name: do not permit traffic in default zone on port 8081/tcp
+      ansible.posix.firewalld:
+        port: 8081/tcp
+        permanent: true
+        state: disabled
+    
+    - name: Redirect port 443 to 8443 with Rich Rule
+      ansible.posix.firewalld:
+        rich_rule: rule family=ipv4 forward-port port=443 protocol=tcp to-port=8443
+        zone: public
+        permanent: true
+        immediate: true
+        state: enabled
 
   # SSH setup
     - name: Add a host in the configuration
@@ -72,3 +92,22 @@
         identity_file: "/home/{{ create_user }}/.ssh/id_rsa"
         port: '2223'
         state: present
+
+            #! Verander essentiele sshd configuratie.
+    - name: Update SSH configuration file for more security.
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        #! kijkt of er geen fouten zijn in de ssh configuratie file.
+        validate: 'sshd -t -f %s'
+      with_items:
+        - regexp: "^PasswordAuthentication"
+          line: "PasswordAuthentication no"
+        - regexp: "^PermitRootLogin"
+          line: "PermitRootLogin no"
+        - regexp: "^Port"
+          line: "Port 2223"
+      #! Handler wordt aangeroepen.
+      notify: restart ssh
