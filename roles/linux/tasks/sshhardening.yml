@@ -1,0 +1,24 @@
+# Tijdens het zoeken naar SSH security kwam ik uit op (https://www.sshguard.net/faq.html) SSHGuard. Ik ben van plan dit te
+# gebruiken voor SSH System Hardening. Zie link naar FAQ.
+
+- name: Install sshguard package
+  ansible.builtin.package:
+    name: sshguard
+    state: present
+  tags:
+    - sshguard
+
+- name: create sshguard whitelist
+  template:
+    dest: /etc/sshguard/whitelist
+    owner: root
+    group: root
+    mode: 'u=rw,go=r'
+    backup: yes
+  notify:
+    - restart sshguard server als het niet zelf doet in 10s
+
+- name: restart sshguard server
+  service:
+    name: sshguard
+    state: restarted
