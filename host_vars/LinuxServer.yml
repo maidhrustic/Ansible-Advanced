@@ -2,7 +2,7 @@
 create_user: user
 hostname: noorderpoort.intern
 copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
-sys_packages: [ 'curl', 'vim', 'git', 'ufw']
+sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'firewalld']
 
 # sshGuard
 sshguard_default_whitelist:
