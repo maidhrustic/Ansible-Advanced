@@ -3,6 +3,11 @@
       apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
 
 # Sudo Group Setup
+    - name: "Installeer sudo"
+      ansible.builtin.package:
+        pkg: "sudo"
+        state: present
+
     - name: Make sure we have a 'wheel' group
       group:
         name: wheel
@@ -83,31 +88,9 @@
         permanent: true
         immediate: true
         state: enabled
-
-  # SSH setup
-    - name: Add a host in the configuration
-      community.general.ssh_config:
-        user: "{{ create_user }}"
-        host: "{{ hostname }}"
-        identity_file: "/home/{{ create_user }}/.ssh/id_rsa"
-        port: '2223'
-        state: present
-
-            #! Verander essentiele sshd configuratie.
-    - name: Update SSH configuration file for more security.
-      lineinfile:
-        dest: /etc/ssh/sshd_config
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-        state: present
-        #! kijkt of er geen fouten zijn in de ssh configuratie file.
-        validate: 'sshd -t -f %s'
-      with_items:
-        - regexp: "^PasswordAuthentication"
-          line: "PasswordAuthentication no"
-        - regexp: "^PermitRootLogin"
-          line: "PermitRootLogin no"
-        - regexp: "^Port"
-          line: "Port 2223"
-      #! Handler wordt aangeroepen.
-      notify: restart ssh
+        
+      # SSHguard 
+    - include: sshhardening.yml
+      tags:
+      - sshguard
+ 
