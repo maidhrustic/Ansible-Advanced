@@ -3,7 +3,7 @@
 ## De contributors zijn: Joshua, Andy, Maid, Sebastiaan en Michel.
 
 ## Nadat je de repo hebt gecloned naar je eigen machine, run dan vervolgens het volgende commando:
-`ansible-galaxy install -r requirements.yml`
+`ansible-galaxy collection install -r requirements.yml && ansible-galaxy role install -r requirements.yml`
 
 > **HIERVOOR MOET JE WEL IN DE JUISTE DIRECTORY ZITTEN!!!!!!!!!!!!!** <br>
 **Requirements.yml** bevat alle collections/roles die wij hebben gebruikt om de modules in de playbooks te kunnen gebruiken. <br>
