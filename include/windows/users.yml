@@ -1,21 +1,24 @@
 ---
 - hosts: WinS2019
   become: false
-
-- hosts: WinS2019
   gather_facts: false
   vars_files:
     - ../../group_vars/WindowsServer/vault.yml
     - ../../group_vars/WindowsServer/vars.yml
-    - ../../csv/domain_users.yml
+
   tasks:
-    - name: Voeg de gebruikers toe aan de domein.
-      win_domain_user:
-        name: "{{ item.key }}"
-        firstname: "{{ item.value.firstname }}"
-        surname: "{{ item.value.surname }}"
-        password: "{{ item.value.password }}"
-        password_expired: yes
+    - name: Include de AD users
+      include_vars:
+        file: ../../users/ad_users.yml
+        name: ad_users
+
+    - name: Creeër de AD users
+      loop: "{{ ad_users.users }}"
+      microsoft.ad.user:
+        name: "{{ item.username }}"
+        given_name: "{{ item.given_name }}"
+        surname: "{{ item.surname }}"
+        password: "{{ item.password }}"
+        state: present
         attributes:
-          displayName: "{{ item.value.firstname }} {{ item.value.surname }}"
-      loop: "{{ lookup('dict', users) }}"
+          displayName: "{{ item.given_name }} {{ item.surname }}"

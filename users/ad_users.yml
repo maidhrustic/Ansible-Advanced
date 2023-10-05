@@ -1,0 +1,31 @@
+---
+users:
+  - username: asu
+    given_name: "Andy"
+    surname: "Su"
+    password: "{{ windows_password }}"
+
+  - username: mhrustic
+    given_name: "Maid"
+    surname: "Hrustic"
+    password: "{{ windows_password }}"
+
+  - username: jdegraaf
+    given_name: "Joshua"
+    surname: "de Graaf"
+    password: "{{ windows_password }}"
+
+  - username: mriemersma
+    given_name: "Michel"
+    surname: "Riemersma"
+    password: "{{ windows_password }}"
+
+  - username: sknol
+    given_name: "Sebastiaan"
+    surname: "Knol"
+    password: "{{ windows_password }}"
+
+  - username: rbaron
+    given_name: "Rykle"
+    surname: "Baron"
+    password: "{{ windows_password }}"
