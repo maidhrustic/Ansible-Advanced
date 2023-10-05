@@ -3,3 +3,8 @@ create_user: user
 hostname: noorderpoort.intern
 copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 sys_packages: [ 'curl', 'vim', 'git', 'ufw']
+
+# sshGuard
+sshguard_default_whitelist:
+  - "127.0.0.0/8"
+  - "::1/128"
