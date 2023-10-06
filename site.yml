@@ -3,6 +3,7 @@
   become: true
   roles:
   - { role: docker, tags: [ 'docker']}
+  - { role: ntp, tags: [ 'ntp']}
 
 - hosts: routers 
   gather_facts: true
