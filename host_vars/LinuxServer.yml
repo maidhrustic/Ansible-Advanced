@@ -8,3 +8,38 @@ sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'firewalld']
 sshguard_default_whitelist:
   - "127.0.0.0/8"
   - "::1/128"
+
+# NTP
+__ntp_daemon: ntp
+ntp_tzdata_package: tzdata
+__ntp_package: ntp
+__ntp_config_file: /etc/ntp.conf
+__ntp_driftfile: /var/lib/ntp/drift
+ntp_cron_daemon: cron
+
+ntp_enabled: true
+ntp_timezone: Etc/UTC
+
+# ntp_daemon: [various]
+# ntp_package: ntp
+# ntp_config_file: /etc/ntp.conf
+# ntp_driftfile: [various]
+
+ntp_manage_config: true
+
+# NTP server area configuration (leave empty for 'Worldwide').
+# See: http://support.ntp.org/bin/view/Servers/NTPPoolServers
+ntp_area: 'nl'
+ntp_servers:
+  - "0{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+  - "1{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+  - "2{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+  - "3{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+
+ntp_restrict:
+  - "127.0.0.1"
+  - "::1"
+
+ntp_cron_handler_enabled: false
+
+ntp_tinker_panic: true
