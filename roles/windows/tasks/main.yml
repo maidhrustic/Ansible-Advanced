@@ -35,6 +35,6 @@
   ansible.builtin.include_tasks:
     file: ../../../include/windows/users.yml
 
-- name: " Include de Users configuratie. "
+- name: " Include de Shares configuratie. "
   ansible.builtin.include_tasks:
     file: ../../../include/windows/shares.yml
