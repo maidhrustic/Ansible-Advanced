@@ -1,0 +1,32 @@
+---
+users:
+  asu:
+    firstname: "Andy"
+    surname: "Su"
+    path: "OU=Administratie,OU=NPAfdelingen,DC={{ domain }},DC={{ controller}}"
+    groups: "GG_Administratie"
+  mhrustic:
+    firstname: "Maid"
+    surname: "Hrustic"
+    path: "OU=Directie,OU=NPAfdelingen,DC={{ domain }},DC={{ controller }}"
+    groups: "GG_Directie"
+  jdegraaf:
+    firstname: "Joshua"
+    surname: "de Graaf"
+    path: "OU=Directie,OU=NPAfdelingen,DC={{ domain }},DC={{ controller }}"
+    groups: "GG_Directie"
+  sknol:
+    firstname: "Sebastiaan"
+    surname: "Knol"
+    path: "OU=Verkoop,OU=NPAfdelingen,DC={{ domain }},DC={{ controller }}"
+    groups: "GG_Verkoop"
+  mriemersma:
+    firstname: "Michel"
+    surname: "Riemersma"
+    path: "OU=Productie,OU=NPAfdelingen,DC={{ domain }},DC={{ controller }}"
+    groups: "GG_Productie"
+  rbaron:
+    firstname: "Rykle"
+    surname: "Baron"
+    path: "OU=Automatisering,OU=NPAfdelingen,DC={{ domain }},DC={{ controller }}"
+    groups: "GG_Automatisering"
