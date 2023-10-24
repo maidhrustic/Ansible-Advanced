@@ -1,13 +1,44 @@
 ---
 create_user: user
-hostname: noorderpoort.intern
+hostname: debian
 copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
-sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'firewalld']
+sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'firewalld', 'ncdu']
 
-# sshGuard
-sshguard_default_whitelist:
-  - "127.0.0.0/8"
-  - "::1/128"
+# user.yml
+users:
+  - username: sebas
+    password: Welkom01!
+  - username: michel
+    password: Welkom01!
+  - username: andy
+    password: Welkom01!
+  - username: maid
+    password: Welkom01!
+  - username: joshua
+    password: Welkom01!
+
+# # sshGuard (Not configured)
+# sshguard_block_time: 120
+# sshguard_detection_time: 1800
+# sshguard_threshold: 30
+
+# sshguard_config_items:
+#   - sshguard.conf
+#   - whitelist
+
+# jinja:
+#   - sshguard.conf
+#   - whitelist
+
+
+# sshguard_config_path: /etc/sshguard-2.4.2
+# sshguard_service: sshguard
+# sshguard_service_enabled: yes
+# sshguard_service_state: started
+
+# sshguard_whitelist:
+#   - comment: IPv4 localhost
+#     address: 127.0.0.0/8
 
 # NTP
 __ntp_daemon: ntp
