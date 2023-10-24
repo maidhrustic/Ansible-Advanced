@@ -1,94 +1,27 @@
-- name: Install Prerequisites
-  apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+# Alles wat niet hashed is werkt 100% De rest ben ik aan het veranderen/maken/verbeteren
 
-# Sudo Group Setup
-- name: "Installeer sudo"
-  ansible.builtin.package:
-    pkg: "sudo"
-    state: present
 
-- name: Make sure we have a 'wheel' group
-  group:
-    name: wheel
-    state: present
+# - name: "Include de Ansible-Vault file."
+#   include_vars:
+#     file: group_vars/WindowsServer/vault.yml
+#   no_log: true
 
-- name: Allow 'wheel' group to have passwordless sudo
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    regexp: '^%wheel'
-    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
-    validate: '/usr/sbin/visudo -cf %s'
+- name: " Include yml met basic tasks"
+  ansible.builtin.include_tasks:
+    file: include/linux/start.yml
 
-# User + Key Setup
-- name: Create a new regular user with sudo privileges
-  user:
-    name: "{{ create_user }}"
-    state: present
-    groups: wheel
-    append: true
-    create_home: true
-    shell: /bin/bash
+- name: " Include yml met adding users"
+  ansible.builtin.include_tasks:
+    file: include/linux/users.yml
 
-- name: Set authorized key for remote user
-  authorized_key:
-    user: "{{ create_user }}"
-    state: present
-    key: "{{ copy_local_key }}"
+# - name: " Include yml met UFW install / config"
+#   ansible.builtin.include_tasks:
+#     file: include/linux/ufw.yml
 
-- name: Disable password authentication for root
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    state: present
-    regexp: '^#?PermitRootLogin'
-    line: 'PermitRootLogin prohibit-password'
+# - name: "Adding SSHGuard"
+#   ansible.builtin.include_tasks:
+#     file: include/linux/SSHGuard.yml
 
-# Install Packages
-- name: Update apt
-  apt: update_cache=yes
-
-- name: Install required system packages
-  apt: name={{ sys_packages }} state=latest
-
-# UFW Setup
-- name: UFW - Allow SSH connections
-  ufw:
-    rule: allow
-    name: OpenSSH
-
-- name: UFW - Deny all other incoming traffic by default
-  ufw:
-    state: enabled
-    policy: deny
-    direction: incoming
- # UFW config (https://docs.ansible.com/ansible/latest/collections/ansible/posix/firewalld_module.html#parameter-zone)
-- name: permit traffic in default zone for https service
-  ansible.posix.firewalld:
-    service: https
-    permanent: true
-    state: enabled
-    
-- name: permit ospf traffic
-  ansible.posix.firewalld:
-    protocol: ospf
-    permanent: true
-    state: enabled
-    
-- name: do not permit traffic in default zone on port 8081/tcp
-  ansible.posix.firewalld:
-    port: 8081/tcp
-    permanent: true
-    state: disabled
-    
-- name: Redirect port 443 to 8443 with Rich Rule
-  ansible.posix.firewalld:
-    rich_rule: rule family=ipv4 forward-port port=443 protocol=tcp to-port=8443
-    zone: public
-    permanent: true
-    immediate: true
-    state: enabled
-        
-      # SSHguard 
-- include: sshhardening.yml
-  tags:
-  - sshguard
+# - name: " Include yml met Backup "
+#   ansible.builtin.include_tasks:
+#     file: include/linux/backup.yml
