@@ -6,16 +6,16 @@ sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'firewalld', 'ncdu']
 
 # user.yml
 users:
-  - username: sebas
-    password: Welkom01!
-  - username: michel
-    password: Welkom01!
-  - username: andy
-    password: Welkom01!
-  - username: maid
-    password: Welkom01!
-  - username: joshua
-    password: Welkom01!
+  - username: x
+    password: x
+  - username: x
+    password: x
+  - username: x
+    password: x
+  - username: x
+    password: x
+  - username: x
+    password: x
 
 # # sshGuard (Not configured)
 # sshguard_block_time: 120
