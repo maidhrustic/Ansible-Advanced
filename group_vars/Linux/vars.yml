@@ -1,1 +1,6 @@
+ansible_user: "Administrator"
+ansible_password: "{{ linux_password }}"
+ansible_become_password: "{{ linux_password }}"
+ansible_ssh_pass: "{{ linux_password }}"
 
+host: "{{ ansible_host}}"
