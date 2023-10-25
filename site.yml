@@ -4,7 +4,7 @@
   roles:
   - { role: docker, tags: [ 'docker']}
   - { role: ntp, tags: [ 'ntp']}
-  - { role: linux, tags: [ 'linux']}
+  # - { role: linux, tags: [ ' werkt volgens jullie niet, dus er is niets te zien.']}
 
 - hosts: routers 
   gather_facts: true
