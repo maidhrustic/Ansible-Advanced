@@ -1,1 +1,35 @@
-# werkt volgens jullie niet, dus er is niets te zien.
+ansible_host: x.x.x.x
+
+__ntp_daemon: ntp
+ntp_tzdata_package: tzdata
+__ntp_package: ntp
+__ntp_config_file: /etc/ntp.conf
+__ntp_driftfile: /var/lib/ntp/drift
+ntp_cron_daemon: cron
+
+ntp_enabled: true
+ntp_timezone: Europe/Amsterdam
+
+# ntp_daemon: [various]
+# ntp_package: ntp
+# ntp_config_file: /etc/ntp.conf
+# ntp_driftfile: [various]
+
+ntp_manage_config: true
+
+# NTP server area configuration (leave empty for 'Worldwide').
+# See: http://support.ntp.org/bin/view/Servers/NTPPoolServers
+ntp_area: 'nl'
+ntp_servers:
+  - "0{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+  - "1{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+  - "2{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+  - "3{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+
+ntp_restrict:
+  - "127.0.0.1"
+  - "::1"
+
+ntp_cron_handler_enabled: false
+
+ntp_tinker_panic: true
