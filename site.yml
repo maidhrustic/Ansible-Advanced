@@ -1,4 +1,4 @@
-- hosts: debian
+- hosts: LinuxServer
   gather_facts: true
   become: true
   roles:
