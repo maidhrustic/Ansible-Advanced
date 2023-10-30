@@ -1,0 +1,80 @@
+- name: "Maak de volgende folders aan als ze nog niet bestonden"
+  ansible.windows.win_file:
+    path: C:\{{ item.name }}
+    state: directory
+  failed_when: false
+  with_items:
+    - {name: "Afdelingen"}
+    - {name: Afdelingen\Productie\Fabricage}
+    - {name: Afdelingen\Verkoop\Inkoop}
+    - {name: Afdelingen\Automatisering\SysAdmins}
+    - {name: Afdelingen\Administratie}
+    - {name: Afdelingen\Directie\Rechterhand}
+    - {name: Afdelingen\Werkrapport}
+
+- name: "Pas de share rechten aan van de map Werkrapport"
+  ansible.windows.win_share:
+    name: "Werkrapport"
+    description: "Dit is een testshare voor Noorderpoort"
+    path: C:\Afdelingen\Werkrapport
+    list: true
+    full: Administrators
+    change: "NOORDERPOORT\\DL_Administratie,NOORDERPOORT\\DL_SysAdmins,NOORDERPOORT\\DL_Automatisering,NOORDERPOORT\\DL_Verkoop,NOORDERPOORT\\DL_Inkoop,NOORDERPOORT\\DL_Directie,NOORDERPOORT\\DL_Rechterhand,NOORDERPOORT\\DL_Productie,NOORDERPOORT\\DL_Fabricage"
+    state: present
+
+- name: "Maak van de ParentFolders mappen een share"
+  ansible.windows.win_share:
+    name: "{{item.name}}"
+    description: "Dit is een testshare voor Noorderpoort"
+    path: C:\Afdelingen\{{item.name}}
+    full: "Administrators"
+    change: "NOORDERPOORT\\{{item.DL}}"
+    list: false
+    state: present
+  with_items:
+    - {name: "Administratie", DL: "DL_Administratie"}
+    - {name: "Automatisering", DL: "DL_Automatisering"}
+    - {name: "Directie", DL: "DL_Directie"}
+    - {name: "Productie", DL: "DL_Productie"}
+    - {name: "Verkoop", DL: "DL_Verkoop"}
+
+- name: "Maak van de SubFolders mappen een share"
+  ansible.windows.win_share:
+    name: "{{item.name}}"
+    description: "Dit is een testshare voor Noorderpoort"
+    path: C:\Afdelingen\{{item.parentfolder}}\{{item.name}}
+    full: "Administrators,NOORDERPOORT\\{{item.DL}}"
+    list: false
+    read: "NOORDERPOORT\\{{item.parentDL}}"
+    state: present
+  with_items:
+    - {name: "Inkoop", DL: "DL_Inkoop", parentfolder: "Verkoop", parentDL: "DL_Verkoop"}
+    - {name: "SysAdmins", DL: "DL_SysAdmins", parentfolder: "Automatisering", parentDL: "DL_Automatisering"}
+    - {name: "Fabricage", DL: "DL_Fabricage", parentfolder: "Productie", parentDL: "DL_Productie"}
+    - {name: "Rechterhand", DL: "DL_Rechterhand", parentfolder: "Directie", parentDL: "DL_Directie"}
+
+- name: "Zorg ervoor dat de Parentfolder alleen mag lezen in de subfolder"
+  ansible.windows.win_acl:
+    path: C:\Afdelingen\{{item.parentfolder}}\{{item.subfolder}}
+    user: "NOORDERPOORT\\{{item.DL}}"
+    rights: Read
+    type: allow
+    state: present
+  with_items:
+    - {parentfolder: "Verkoop", subfolder: "Inkoop", DL: "DL_Verkoop"}
+    - {parentfolder: "Automatisering", subfolder: "SysAdmins", DL: "DL_Automatisering"}
+    - {parentfolder: "Productie", subfolder: "Fabricage", DL: "DL_Productie"}
+    - {parentfolder: "Directie", subfolder: "Rechterhand", DL: "DL_Directie"}
+
+- name: "Zorg ervoor dat de ParentFolder niet mag deleten of schrijven in de subfolder"
+  ansible.windows.win_acl:
+    path: C:\Afdelingen\{{item.parentfolder}}\{{item.subfolder}}
+    user: "NOORDERPOORT\\{{item.DL}}"
+    rights: Delete,Write
+    type: deny
+    state: present
+  with_items:
+    - {parentfolder: "Verkoop", subfolder: "Inkoop", DL: "DL_Verkoop"}
+    - {parentfolder: "Automatisering", subfolder: "SysAdmins", DL: "DL_Automatisering"}
+    - {parentfolder: "Productie", subfolder: "Fabricage", DL: "DL_Productie"}
+    - {parentfolder: "Directie", subfolder: "Rechterhand", DL: "DL_Directie"}

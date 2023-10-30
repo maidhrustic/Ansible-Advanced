@@ -1,4 +1,3 @@
----
 - name: Creeër een nieuwe domein in een nieuw forest op de host.
   ansible.windows.win_domain:
     dns_domain_name: "{{ dns_domain_name }}"

@@ -24,7 +24,13 @@
   become_method: runas
   become_user: Administrator
   roles:
-  - { role: windows, tags: [ 'windows']}
+  - { role: windows ssh, tags: [ 'ssh']}
+  - { role: windows roles, tags: [ 'roles']}
+  - { role: windows adds, tags: [ 'adds']}
+  - { role: windows ou, tags: [ 'ou']}
+  - { role: windows agdlp, tags: [ 'agdlp']}
+  - { role: windows users, tags: [ 'users']}
+  - { role: windows shares, tags: [ 'shares']}
   - { role: windows updates, tags: [ 'updates']}
 
 - hosts: Werkstations
