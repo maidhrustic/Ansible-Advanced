@@ -32,6 +32,8 @@
   - { role: windows_users, tags: [ 'users']}
   - { role: windows_shares, tags: [ 'shares']}
   - { role: windows_updates, tags: [ 'updates']}
+  - { role: windows_backup, tags: [ 'backup']}
+  - { role: windows_restore, tags: [ 'restore']}
 
 - hosts: Werkstations
   gather_facts: true
