@@ -1,0 +1,31 @@
+- name: "Backup de C:/Afdelingen"
+  ansible.windows.win_powershell:
+    script: |
+      $source = "C:/Afdelingen/{{ item }}"
+      $destination = "C:/Backup/Afdelingen/{{ item }}"
+      robocopy $source $destination 
+  with_items:
+    - "Administratie"
+    - "Automatisering"
+    - "Directie"
+    - "Productie"
+    - "Verkoop"
+    - "Werkrapport"
+
+- name: "Compress de folder"
+  ansible.windows.win_powershell:
+    script: |
+      $source = "C:/Backup"
+      $destination = "C:/Backup/backup.zip"
+      Compress-Archive -Path $source -DestinationPath $destination
+
+- name: "Kopieer Afdelingen naar de Ansible Controller"
+  fetch:
+    src: C:/Backup/backup.zip
+    dest: /home/joshua/BACKUP
+  when: ansible_distribution_version >= "10.0"
+
+- name: "Verwijder de oude backup.zip"
+  win_file:
+    path: C:\BACKUP\backup.zip
+    state: absent
