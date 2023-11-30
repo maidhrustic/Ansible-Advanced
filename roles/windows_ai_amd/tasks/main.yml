@@ -1,0 +1,71 @@
+#Dit Playbook is gemaakt voor het automatisch deployen van Stable-Diffusion met een AMD GPU.
+
+- name: Download Miniconda
+  ansible.builtin.win_get_url:
+    url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe
+    dest: C:\AI\Miniconda3-latest-Windows-x86_64.exe
+
+- name: Installeer Miniconda
+  ansible.windows.win_shell: |
+    Start-Process -Wait -FilePath C:\AI\Miniconda3-latest-Windows-x86_64.exe -ArgumentList "/InstallationType=AllUsers /AddToPath=1 /RegisterPython=0 /S"
+  environment:
+    PATH: C:\ProgramData\Miniconda3\Scripts;C:\ProgramData\Miniconda3;{{ ansible_env.PATH | default('') }}
+
+- name: Open Anaconda/Miniconda Terminal
+  ansible.windows.win_shell: 'Start-Process -Wait -FilePath "C:\ProgramData\Miniconda3\Scripts\conda.exe" -ArgumentList "init powershell"'
+
+- name: Maak een nieuwe omgeving aan en installeer de benodigdheden
+  ansible.windows.win_shell: |
+    conda create --name olive python=3.9
+    conda activate olive
+    pip install olive-ai[directml]==0.2.1
+    mkdir C:\AI\olive
+    git clone https://github.com/microsoft/olive --branch v0.2.1 C:\AI\olive
+    cd C:\AI\olive\examples\directml\stable_diffusion
+    pip install -r requirements.txt
+    pip install pydantic==1.10.12
+  args:
+    executable: powershell
+
+- name: Installeer onnxruntime
+  ansible.windows.win_shell: |
+    conda activate olive
+    conda install -c conda-forge onnxruntime==1.7.0
+  args:
+    executable: powershell
+
+
+# OPTIONEEL, KAN PROBLEMEN VEROORZAKEN!
+
+# - name: Maak het ONNX-model en optimaliseer het voor betere runtime
+#   ansible.windows.win_shell: |
+#     conda activate olive
+#     cd C:\AI\olive\examples\directml\stable_diffusion
+#     python stable_diffusion.py --optimize
+  # args:
+  #   executable: powershell
+
+- name: Reboot het werkstation
+  ansible.windows.win_reboot:
+
+#installeer de Git-Repo
+
+- name: Clone de Git-repo met de commandline (AMD VERSION)
+  ansible.windows.win_shell: |
+    git clone https://github.com/lshqqytiger/stable-diffusion-webui-directml C:\AI\stable-diffusion-webui
+    cd C:\AI\stable-diffusion-webui
+    git submodule init
+    git submodule update
+  args:
+    executable: cmd
+
+- name: Genereer Jinja2-template voor webui-user.bat
+  ansible.builtin.template:
+    src: roles/windows_ai/tasks/webui-user.bat.j2
+    dest: C:\AI\stable-diffusion-webui\webui-user.bat
+
+- name: Voer webui-user.bat uit
+  args:
+    executable: cmd
+    chdir:  C:\AI\stable-diffusion-webui
+  script: 'C:\AI\stable-diffusion-webui\webui-user.bat'

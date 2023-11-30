@@ -1,0 +1,18 @@
+#Dit Playbook is gemaakt voor het automatisch deployen van Stable-Diffusion met een Nvidia GPU.
+
+- name: Clone de Git-repo met de commandline
+  win_shell: |
+    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git C:\AI\stable-diffusion-webui
+  args:
+    executable: cmd
+
+- name: Genereer Jinja2-template voor webui-user.bat
+  ansible.builtin.template:
+    src: roles/windows_ai/tasks/webui-user.bat.j2
+    dest: C:\AI\stable-diffusion-webui\webui-user.bat
+
+- name: Voer webui-user.bat uit
+  args:
+    executable: cmd
+    chdir:  C:\AI\stable-diffusion-webui
+  script: 'C:\AI\stable-diffusion-webui\webui-user.bat'

@@ -42,3 +42,6 @@
   become_user: Administrator
   roles:
   - { role: werkstations, tags: [ 'werkstations']}
+  - { role: windows_apps, tags: [ 'apps']}
+  - { role: windows_ai_nvidia, tags: [ 'nvidia']}
+  - { role: windows_ai_amd, tags: [ 'amd']}

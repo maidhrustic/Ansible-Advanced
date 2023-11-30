@@ -1,0 +1,38 @@
+# Dit Playbook installeerd de benodigde softwares voor Stable-Diffusion (image generator (AI))
+
+- name: Maak de map C:\AI aan als deze niet bestaat
+  win_file:
+    path: C:\AI
+    state: directory
+  when: not temp_dir_info.stat.exists
+
+
+# Installeer python
+- name: Download Python-installatieprogramma
+  win_get_url:
+    url: https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
+    dest: C:\AI\python-3.10.6-amd64.exe
+
+- name: Installeer Python
+  win_command: C:\AI\python-3.10.6-amd64.exe /quiet
+  register: install_result
+
+- name: Voeg Python toe aan het systeempad
+  ansible.windows.win_regedit:
+    path: 'HKCU:\Environment'
+    name: PATH
+    data: "C:\\Users\\michel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Python 3.10"
+    type: string
+
+# Installeer Git op windows
+- name: Download Git-installatieprogramma
+  win_get_url:
+    url: https://github.com/git-for-windows/git/releases/download/v2.42.0.windows.2/Git-2.42.0.2-64-bit.exe
+    dest: C:\AI\Git-2.42.0.2-64-bit.exe
+
+- name: Installeer Git
+  win_command: C:\AI\Git-2.42.0.2-64-bit.exe /VERYSILENT /NORESTART /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"
+
+- name: Controleer Git-versie
+  win_command: git --version
+  register: git_version
