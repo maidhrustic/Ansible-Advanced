@@ -1,0 +1,13 @@
+- name: Maak een reverse lookup zone
+  ansible.windows.win_powershell:
+    script: |
+      Add-DnsServerPrimaryZone -NetworkId "{{network_id}}" -ReplicationScope "{{replication}}" -DynamicUpdate "{{dynamic_update}}"
+
+
+- name: Maak een pointer record
+  community.windows.win_dns_record:
+    name: "{{pointer_name}}"
+    type: PTR
+    values: "{{inventory_hostname}}.{{dns_domain_name}}"
+    state: present
+    zone: "{{zone}}"
