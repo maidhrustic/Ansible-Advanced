@@ -27,6 +27,9 @@
   - { role: windows_ssh, tags: [ 'ssh']}
   - { role: windows_roles, tags: [ 'roles']}
   - { role: windows_adds, tags: [ 'adds']}
+  - { role: windows_dns, tags: [ 'dns']}
+  - { role: windows_dhcp, tags: [ 'dhcp']}
+  - { role: windows_firewall, tags: [ 'firewall']}
   - { role: windows_ou, tags: [ 'ou']}
   - { role: windows_agdlp, tags: [ 'agdlp']}
   - { role: windows_users, tags: [ 'users']}
