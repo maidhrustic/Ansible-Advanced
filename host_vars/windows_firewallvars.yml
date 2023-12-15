@@ -1,0 +1,37 @@
+firewall_rules:
+  Allow DHCP Inbound:
+    direction: in
+    localport: 67
+    protocol: udp
+    action: allow
+    enabled: yes
+  Allow DHCP Outbound:
+    direction: out
+    localport: 68
+    protocol: udp
+    action: allow
+    enabled: yes
+  Allow DNS Inbound:
+    direction: in
+    localport: 53
+    protocol: tcp
+    action: allow
+    enabled: yes
+  Allow SSH Inbound:
+    direction: in
+    localport: 22
+    protocol: tcp
+    action: allow
+    enabled: yes
+  Allow RDP Inbound:
+    direction: in
+    localport: 3389
+    protocol: tcp
+    action: allow
+    enabled: yes
+  Allow SMTP Inbound:
+    direction: in
+    localport: 25
+    protocol: tcp
+    action: allow
+    enabled: yes
