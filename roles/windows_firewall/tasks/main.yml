@@ -1,53 +1,15 @@
-- name: Allow DHCP Inbound
-  community.windows.win_firewall_rule:
-    name: "Allow DHCP Inbound"
-    direction: "in"
-    localport: "67"
-    protocol: "udp"
-    action: "allow"
-    enabled: "yes"
+- name: include the firewall rules vars
+  ansible.builtin.include_vars:
+    file: host_vars/windows_firewallvars.yml
 
-- name: Allow DHCP Outbound
-  community.windows.win_firewall_rule:
-    name: "Allow DHCP Outbound"
-    direction: "out"
-    localport: "68"
-    protocol: "udp"
-    action: "allow"
-    enabled: "yes"
 
-- name: Allow DNS Inbound
-  community.windows.win_firewall_rule:
-    name: "Allow DNS Inbound"
-    direction: "in"
-    localport: "53"
-    protocol: "tcp"
-    action: "allow"
-    enabled: "yes"
-
-- name: Allow SSH Inbound
-  community.windows.win_firewall_rule:
-    name: "Allow SSH Inbound"
-    direction: "in"
-    localport: "22"
-    protocol: "tcp"
-    action: "allow"
-    enabled: "yes"
-
-- name: Allow RDP Inbound
-  community.windows.win_firewall_rule:
-    name: "Allow RDP Inbound"
-    direction: "in"
-    localport: "3389"
-    protocol: "tcp"
-    action: "allow"
-    enabled: "yes"
-
-- name: Allow SMTP Inbound
-  community.windows.win_firewall_rule:
-    name: "Allow SMTP Inbound"
-    direction: "in"
-    localport: "25"
-    protocol: "tcp"
-    action: "allow"
-    enabled: "yes"
+- name: add the firewall rules
+  ansible.windows.win_firewall_rule:
+    name: "{{ item.key }}"
+    description: "{{ item.value.description }}"
+    direction: "{{ item.value.direction }}"
+    localport: "{{ item.value.localport }}"
+    protocol: "{{ item.value.protocol }}"
+    action: "{{ item.value.action }}"
+    enabled: "{{ item.value.enabled }}"
+  loop: "{{ lookup('dict', 'firewall_rules') }}"
